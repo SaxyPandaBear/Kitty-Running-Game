@@ -16,37 +16,78 @@ window.onload = function() {
     var game = new Phaser.Game( 800, 600, Phaser.AUTO, 'game', { preload: preload, create: create, update: update } );
     
     function preload() {
-        // Load an image and call it 'logo'.
-        game.load.image( 'logo', 'assets/phaser.png' );
+        
+        game.load.image('background', "assets/sprites/background.png");
+        
+        //player sprite sheets for animations
+        game.load.spritesheet("cat", "assets/sprites/cat.png", 572, 474);
+        
+        //sprite sheet for different items spawned throughout the game
+        game.load.spritesheet("items", "assets/sprites/items.png", 127, 129);
     }
     
-    var bouncy;
+    var player; //the player
+    var cursors; //the input methods (keyboard inputs)
+    var timeText; //the time that has elapsed since the player started the game
+    var score; //the score a player accumulates during their play time
+    var scoreText; //display for score value
+    var startGame = false; //wait for user input to start game
+    var spawnHazards = false; //wait for user input to begin spawning obstacles
     
     function create() {
-        // Create a sprite at the center of the screen using the 'logo' image.
-        bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'logo' );
-        // Anchor the sprite at its center, as opposed to its top-left corner.
-        // so it will be truly centered.
-        bouncy.anchor.setTo( 0.5, 0.5 );
+        var pointer = new Pointer(this, 1, CURSOR);
         
-        // Turn on the arcade physics engine for this sprite.
-        game.physics.enable( bouncy, Phaser.Physics.ARCADE );
-        // Make it bounce off of the world bounds.
-        bouncy.body.collideWorldBounds = true;
+        game.physics.startSystem(Phaser.Physics.ARCADE);
         
+        
+        
+        
+        
+        //***************************************************************************
+        //left from template
         // Add some text using a CSS style.
         // Center it in X, and position its top 15 pixels from the top of the world.
         var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
-        var text = game.add.text( game.world.centerX, 15, "Build something awesome.", style );
+        var text = game.add.text( game.world.centerX, 15, "click to start", style );
         text.anchor.setTo( 0.5, 0.0 );
+        
+        if (pointer.isDown == true) {
+            start();
+        }
     }
     
     function update() {
-        // Accelerate the 'logo' sprite towards the cursor,
-        // accelerating at 500 pixels/second and moving no faster than 500 pixels/second
-        // in X or Y.
-        // This function returns the rotation angle that makes it visually match its
-        // new trajectory.
-        bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, this.game.input.activePointer, 500, 500, 500 );
+        if (startGame) {
+            
+        }
+    }
+    
+    //creates entities at random which kill the player and end the game or add to a score
+    function spawn() {
+        var spawnGood = Math.random(); //if < 0.5, then spawn good item, else spawn obstacle
+        if (spawnGood < 0.5) {
+            //then we spawn a coin
+        }
+        else {
+            //spawn a flag obstacle
+        }
+    }
+    
+    function collectCoin(player, coin) {
+        
+    }
+    
+    //starts the game by flipping boolean flags
+    function start() {
+        startGame = true;
+        spawnHazards = true;
+    }
+    
+    //ends the game by reseting boolean flags
+    function end() {
+        //stop all game functions
+        game.input.enabled = false;
+        spawnHazards = false;
+        startGame = false; //this stops update()
     }
 };
